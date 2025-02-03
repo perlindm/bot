@@ -25,6 +25,8 @@ body {
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
     max-width: 90%; /* Ограничиваем ширину контейнера */
     margin: auto; /* Центрируем контейнер */
+    width: 100%;
+    max-width: 500px; /* Максимальная ширина для мобильных устройств */
 }
 
 h1 {
@@ -70,6 +72,66 @@ p {
     font-size: 1.2rem;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+input[type="text"],
+input[type="date"] {
+    padding: 12px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus {
+    outline: none;
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+}
+
+button[type="submit"] {
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%; /* Кнопка занимает всю ширину контейнера */
+}
+
+button[type="submit"]:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(255, 126, 95, 0.5);
+}
+
+#result {
+    margin-top: 20px;
+    text-align: left;
+}
+
+#result ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#result li {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
 /* Адаптивность для мобильных устройств */
 @media (max-width: 600px) {
     h1 {
@@ -80,8 +142,10 @@ p {
         font-size: 1rem;
     }
 
-    .btn {
+    input[type="text"],
+    input[type="date"],
+    button {
         font-size: 0.9rem;
-        padding: 10px 15px;
+        padding: 10px;
     }
 }
