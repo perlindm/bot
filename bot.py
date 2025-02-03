@@ -8,7 +8,7 @@ def start(update: Update, context: CallbackContext):
         "Я могу помочь вам найти авиабилеты, отели и экскурсии.\n\n"
         "Чтобы начать, нажмите кнопку ниже или напишите мне, что вас интересует.",
         reply_markup={
-            "keyboard": [[{"text": "Открыть Mini App", "web_app": {"url": "https://your-mini-app-url.com"}}]],
+            "keyboard": [[{"text": "Открыть Mini App", "web_app": {"url": "https://bot-telegram-puce.vercel.app"}}]],
             "resize_keyboard": True,
             "one_time_keyboard": True,
         },
@@ -29,7 +29,7 @@ def handle_message(update: Update, context: CallbackContext):
 # Основная функция для запуска бота
 def main():
     # Вставьте свой API-токен здесь
-    token = "YOUR_TELEGRAM_BOT_TOKEN"
+    token = "7781444422:AAHo6srAWEMMj8t6PsaVo-vzj3AjVJKWZjY"
     updater = Updater(token)
 
     # Добавляем обработчики команд
