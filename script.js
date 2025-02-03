@@ -1,17 +1,22 @@
 // Инициализация Telegram Web App
 const tg = window.Telegram.WebApp;
 
+// Функция для открытия ссылок через Telegram
+function openLink(url) {
+    tg.openLink(url); // Открывает ссылку через Telegram
+}
+
 // Кнопка "Авиабилеты"
 document.getElementById('flights').addEventListener('click', () => {
-    tg.sendData('search_flights'); // Отправляем данные обратно в бота
+    openLink('https://www.skyscanner.com');
 });
 
 // Кнопка "Отели"
 document.getElementById('hotels').addEventListener('click', () => {
-    tg.sendData('search_hotels');
+    openLink('https://www.booking.com');
 });
 
 // Кнопка "Экскурсии"
 document.getElementById('tours').addEventListener('click', () => {
-    tg.sendData('search_tours');
+    openLink('https://www.getyourguide.com');
 });
