@@ -1,58 +1,43 @@
 from flask import Flask, request, jsonify
 import requests
+from flask_cors import CORS
+import os
+import logging
 
-app = Flask(__name__)
-
-# API-ключи и URL
-RAPIDAPI_KEY = "e91259e43cmsh14a3ed98ee053eep16dd00jsn7a94eccb4420"
-BASE_URL = "https://skyscanner89.p.rapidapi.com/flights/one-way/list"
-
-# Функция для получения данных о ценах
-@app.route('/search-flights', methods=['GET'])
-def search_flights():
-    origin = request.args.get('origin')  # Город отправления (например, LON)
-    destination = request.args.get('destination')  # Город назначения (например, NYC)
-    date = request.args.get('date')  # Дата вылета (например, 2023-12-01)
-
-    # Параметры запроса
-    querystring = {
-        "origin": origin,
-        "destination": destination,
-        "date": date,
-        "adults": "1",  # Количество взрослых пассажиров
-        "currency": "USD"  # Валюта
-    }
-
-    headers = {
-        'x-rapidapi-key': RAPIDAPI_KEY,
-        'x-rapidapi-host': "skyscanner89.p.rapidapi.com"
-    }
-
-    # Отправляем запрос к Skyscanner API
-    response = requests.get(BASE_URL, headers=headers, params=querystring)
-
-    if response.status_code == 200:
-        data = response.json()
-        return jsonify(data)
-    else:
-        return jsonify({"error": "Не удалось получить данные"}), response.status_code
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
-    import logging
-
+# Настройка логирования
 logging.basicConfig(level=logging.DEBUG)
 
+# Создаем экземпляр Flask
+app = Flask(__name__)
+CORS(app)  # Разрешаем CORS для всех доменов
+
+# Получаем переменные окружения
+RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
+RAPIDAPI_HOST = os.getenv("RAPIDAPI_HOST", "skyscanner89.p.rapidapi.com")  # Значение по умолчанию
+
+# Базовый URL для запросов к Skyscanner API
+BASE_URL = f"https://{RAPIDAPI_HOST}/flights/one-way/list"
+
+# Заголовки для запросов
+headers = {
+    'x-rapidapi-key': RAPIDAPI_KEY,
+    'x-rapidapi-host': RAPIDAPI_HOST
+}
+
+# Маршрут для поиска авиабилетов
 @app.route('/search-flights', methods=['GET'])
 def search_flights():
     try:
+        # Получаем параметры из запроса
         origin = request.args.get('origin')
         destination = request.args.get('destination')
         date = request.args.get('date')
 
-        logging.debug(f"Параметры запроса: origin={origin}, destination={destination}, date={date}")
+        # Проверяем, что все параметры указаны
+        if not origin or not destination or not date:
+            return jsonify({"error": "Необходимо указать origin, destination и date"}), 400
 
+        # Формируем параметры запроса
         querystring = {
             "origin": origin,
             "destination": destination,
@@ -61,61 +46,28 @@ def search_flights():
             "currency": "USD"
         }
 
-        headers = {
-            'x-rapidapi-key': RAPIDAPI_KEY,
-            'x-rapidapi-host': "skyscanner89.p.rapidapi.com"
-        }
+        # Логируем запрос
+        logging.debug(f"Параметры запроса: origin={origin}, destination={destination}, date={date}")
 
+        # Отправляем запрос к Skyscanner API
         response = requests.get(BASE_URL, headers=headers, params=querystring)
-        logging.debug(f"Ответ от Skyscanner API: {response.status_code}, {response.text}")
+        data = response.json()
 
-        if response.status_code == 200:
-            return jsonify(response.json())
+        # Логируем ответ от Skyscanner API
+        logging.debug(f"Ответ от Skyscanner API: {response.status_code}, {data}")
+
+        # Проверяем статус ответа
+        if response.status_code == 200 and "flights" in data:
+            return jsonify(data)
         else:
-            logging.error(f"Ошибка Skyscanner API: {response.status_code}, {response.text}")
-            return jsonify({"error": "Не удалось получить данные"}), response.status_code
+            error_message = data.get("message", "Не удалось получить данные")
+            logging.error(f"Ошибка Skyscanner API: {response.status_code}, {error_message}")
+            return jsonify({"error": error_message}), response.status_code
+
     except Exception as e:
         logging.error(f"Произошла ошибка: {str(e)}")
         return jsonify({"error": "Внутренняя ошибка сервера"}), 500
-    @app.route('/search-flights', methods=['GET'])
-def search_flights():
-    origin = request.args.get('origin')
-    destination = request.args.get('destination')
-    date = request.args.get('date')
 
-    # Проверка параметров
-    if not origin or not destination or not date:
-        return jsonify({"error": "Необходимо указать origin, destination и date"}), 400
-
-    try:
-        # Проверка формата даты
-        from datetime import datetime
-        datetime.strptime(date, "%Y-%m-%d")
-    except ValueError:
-        return jsonify({"error": "Неверный формат даты. Используйте YYYY-MM-DD"}), 400
-
-    querystring = {
-        "origin": origin,
-        "destination": destination,
-        "date": date,
-        "adults": "1",
-        "currency": "USD"
-    }
-
-    headers = {
-        'x-rapidapi-key': RAPIDAPI_KEY,
-        'x-rapidapi-host': "skyscanner89.p.rapidapi.com"
-    }
-
-    response = requests.get(BASE_URL, headers=headers, params=querystring)
-    data = response.json()
-
-    if response.status_code == 200 and "flights" in data:
-        return jsonify(data)
-    else:
-        logging.error(f"Ошибка Skyscanner API: {response.status_code}, {data}")
-        return jsonify({"error": data.get("message", "Не удалось получить данные")}), response.status_code
-    import os
-
-# Замените строку с RAPIDAPI_KEY
-RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
+# Запуск приложения
+if __name__ == "__main__":
+    app.run(debug=True)
