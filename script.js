@@ -12,7 +12,8 @@ document.getElementById('flight-form').addEventListener('submit', async (e) => {
     resultDiv.innerHTML = "<p>Загрузка...</p>";
 
     try {
-        const response = await fetch(`https://your-backend-url.onrender.com/search-flights?origin=${origin}&destination=${destination}&date=${date}`);
+        // Замените URL на адрес вашего backend
+        const response = await fetch(`https://bot-back-i4in.onrender.com/search-flights?origin=${origin}&destination=${destination}&date=${date}`);
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.error || "Не удалось получить данные");
