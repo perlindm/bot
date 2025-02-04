@@ -2,7 +2,11 @@ from flask import Flask, request, jsonify
 import requests
 from flask_cors import CORS
 import os
+from dotenv import load_dotenv  # Для загрузки переменных из .env
 import logging
+
+# Загружаем переменные окружения из файла .env
+load_dotenv()
 
 # Настройка логирования
 logging.basicConfig(level=logging.DEBUG)
@@ -13,6 +17,10 @@ CORS(app)  # Разрешаем CORS для всех доменов
 
 # Получаем переменные окружения
 RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
+if not RAPIDAPI_KEY:
+    logging.error("API-ключ не найден. Убедитесь, что переменная окружения RAPIDAPI_KEY установлена.")
+    raise ValueError("API-ключ не найден. Убедитесь, что переменная окружения RAPIDAPI_KEY установлена.")
+
 RAPIDAPI_HOST = os.getenv("RAPIDAPI_HOST", "skyscanner89.p.rapidapi.com")  # Значение по умолчанию
 
 # Базовый URL для запросов к Skyscanner API
@@ -59,6 +67,9 @@ def search_flights():
         # Проверяем статус ответа
         if response.status_code == 200 and "flights" in data:
             return jsonify(data)
+        elif response.status_code == 401:
+            logging.error("Недействительный API-ключ. Проверьте настройки переменных окружения.")
+            return jsonify({"error": "Недействительный API-ключ. Проверьте настройки."}), 401
         else:
             error_message = data.get("message", "Не удалось получить данные")
             logging.error(f"Ошибка Skyscanner API: {response.status_code}, {error_message}")
@@ -67,6 +78,7 @@ def search_flights():
     except Exception as e:
         logging.error(f"Произошла ошибка: {str(e)}")
         return jsonify({"error": "Внутренняя ошибка сервера"}), 500
+
 
 # Запуск приложения
 if __name__ == "__main__":
