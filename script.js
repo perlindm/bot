@@ -1,26 +1,5 @@
 // script.js
 
-// Обработчик для кнопок
-document.querySelectorAll('.btn').forEach(button => {
-    button.addEventListener('click', () => {
-        const action = button.id;
-
-        switch (action) {
-            case 'flights':
-                window.open('https://www.skyscanner.com', '_blank');
-                break;
-            case 'hotels':
-                window.open('https://www.booking.com', '_blank');
-                break;
-            case 'tours':
-                window.open('https://www.getyourguide.com', '_blank');
-                break;
-            default:
-                console.error('Неизвестное действие');
-        }
-    });
-});
-
 // Обработчик для формы поиска авиабилетов
 document.getElementById('flight-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -33,7 +12,7 @@ document.getElementById('flight-form').addEventListener('submit', async (e) => {
     resultDiv.innerHTML = "<p>Загрузка...</p>";
 
     try {
-        const response = await fetch(`http://localhost:5000/search-flights?origin=${origin}&destination=${destination}&date=${date}`);
+        const response = await fetch(`https://your-backend-url.onrender.com/search-flights?origin=${origin}&destination=${destination}&date=${date}`);
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.error || "Не удалось получить данные");
@@ -54,4 +33,9 @@ document.getElementById('flight-form').addEventListener('submit', async (e) => {
         console.error("Ошибка:", error);
         resultDiv.innerHTML = `<p>Произошла ошибка: ${error.message}</p>`;
     }
+});
+
+// Обработчик для кнопки "Готовые путешествия"
+document.getElementById('ready-trips').addEventListener('click', () => {
+    alert("Скоро здесь будут готовые путешествия!");
 });

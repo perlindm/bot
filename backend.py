@@ -115,3 +115,7 @@ def search_flights():
     else:
         logging.error(f"Ошибка Skyscanner API: {response.status_code}, {data}")
         return jsonify({"error": data.get("message", "Не удалось получить данные")}), response.status_code
+    import os
+
+# Замените строку с RAPIDAPI_KEY
+RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")

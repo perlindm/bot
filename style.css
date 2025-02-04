@@ -39,44 +39,10 @@ p {
     margin-bottom: 20px;
 }
 
-.buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* Стили для кнопок */
-.btn {
-    background: linear-gradient(135deg, #ff7e5f, #feb47b);
-    color: white;
-    border: none;
-    padding: 15px 20px;
-    font-size: 1rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%; /* Кнопки занимают всю ширину контейнера */
-    box-sizing: border-box; /* Учитываем padding в ширину */
-}
-
-.btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 15px rgba(255, 126, 95, 0.5);
-}
-
-.btn i {
-    font-size: 1.2rem;
-}
-
 form {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-top: 20px;
 }
 
 input[type="text"],
@@ -130,6 +96,50 @@ button[type="submit"]:hover {
     margin-bottom: 5px;
     border-radius: 5px;
     font-size: 1rem;
+}
+/* Стили для нижних кнопок */
+.footer-buttons {
+    margin-top: 30px; /* Отступ сверху для блока кнопок */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.footer-buttons .btn {
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%; /* Кнопки занимают всю ширину контейнера */
+}
+
+.footer-buttons .btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(255, 126, 95, 0.5);
+}
+
+/* Новый стиль для кнопки "Готовые путешествия" */
+#ready-trips {
+    background: linear-gradient(135deg, #000000, #a1a1a1); /* Фиолетово-синий градиент */
+    margin-top: 20px; /* Отступ сверху */
+}
+
+/* Стиль для кнопки TikTok */
+.footer-buttons .tiktok-btn {
+    background: linear-gradient(135deg, #a1a1a1, #000000); /* Черный градиент для TikTok */
+    text-decoration: none;
+}
+
+.footer-buttons .tiktok-btn i {
+    font-size: 1.2rem;
 }
 
 /* Адаптивность для мобильных устройств */
